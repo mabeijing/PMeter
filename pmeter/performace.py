@@ -3,12 +3,15 @@ import os
 import uuid
 import threading
 from typing import Optional
+from pmeter.fmt_log import format_logger
 
-from loguru import logger
+# from loguru import logger
 import argparse
 import requests
 from queue import Queue
 from datetime import datetime, timedelta
+
+logger = format_logger(__name__)
 
 
 class HttpCollection:
@@ -151,6 +154,9 @@ class PMeter:
             task_group_thread.join()
 
     def analysis(self):
+
+        collections_map: dict[HttpCollection, dict[str, list]] = {}
+        collections_result: dict[HttpCollection, bool] = {}
         logger.debug(f'*********** Start analysis ************')
         for collection, q in self.q_map.items():
             for _ in range(q.qsize()):
@@ -159,13 +165,9 @@ class PMeter:
 
 
 if __name__ == '__main__':
-    parser = args_parser()
-    args = parser.parse_args()
-    parser.print_help()
-
-    # pmeter = PMeter()
-    # pmeter.create_task(collection=HttpCollection(name='api1', file=args.f), thread_number=2, loop_count=5,
-    #                    thread_group='测试')
-    # pmeter.run()
-    # print('done!')
-    # pmeter.analysis()
+    pmeter = PMeter()
+    pmeter.create_task(collection=HttpCollection(name='api1', file='demo.json'), thread_number=2, loop_count=5,
+                       thread_group='测试')
+    pmeter.run()
+    print('done!')
+    pmeter.analysis()
