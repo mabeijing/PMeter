@@ -5,13 +5,12 @@ import threading
 from typing import Optional
 from pmeter.fmt_log import format_logger
 
-# from loguru import logger
 import argparse
 import requests
 from queue import Queue
 from datetime import datetime, timedelta
 
-logger = format_logger(__name__)
+logger = format_logger()
 
 
 class HttpCollection:
